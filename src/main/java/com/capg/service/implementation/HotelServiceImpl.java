@@ -17,10 +17,9 @@ public class HotelServiceImpl implements HotelService {
 	Validate validate = new Validation();
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMMyyyy");
 	Scanner sc = new Scanner(System.in);
-	static int No_of_days = 0;
-	static int weekendDays = 0;
-	static int minRate = 1000;
-	static String HotelName = null;
+	static int No_of_days;
+	static int weekendDays;
+	static int minRate;
 
 	@Override
 	public void addHotel(Hotel hotel) {
@@ -48,7 +47,7 @@ public class HotelServiceImpl implements HotelService {
 		}
 		return null;
 	}
-
+	
 	void getMinRate(Hotel hotel) {
 		minRate = minRate < expenditure(hotel) ? minRate : expenditure(hotel);
 	}
@@ -57,9 +56,11 @@ public class HotelServiceImpl implements HotelService {
 		int price = hotel.getWeekDayRate() * (No_of_days - weekendDays) + hotel.getWeekEndRate() * weekendDays;
 		return price;
 	}
-
-	@Override
-	public void cheapestHotel() {
+	
+	void setDatesDaysAndwwekDays() {
+		No_of_days = 0;
+		weekendDays = 0;
+		minRate = 1000;
 		System.out.println("Check In Date : ");
 		Date inDate = validatedDate();
 		System.out.println("Check Out Date : ");
@@ -75,18 +76,25 @@ public class HotelServiceImpl implements HotelService {
 				}
 				tempDay = (tempDay + 1) % 7;
 			}
-			System.out.println("Total no. of Days : " + No_of_days);
-			hotelList.stream().forEach(hotel -> getMinRate(hotel));
-			Integer rating = hotelList.stream()
-					.filter(hotel -> (hotel.getWeekDayRate() * (No_of_days - weekendDays)
-							+ hotel.getWeekEndRate() * weekendDays) == minRate)
-					.map(e -> e.getRatings()).max(Integer::compare).get();
-			hotelList.stream()
-			.filter(hotel -> (hotel.getWeekDayRate() * (No_of_days - weekendDays)
-					+ hotel.getWeekEndRate() * weekendDays) == minRate).filter(hotel -> hotel.getRatings()==rating)
-			.forEach(i -> System.out.println(i.getName()+ ", Rating : " + i.getRatings() + " and Total Rates: $" + minRate)); 
 		} catch (DateTimeException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void cheapestHotel() {
+			setDatesDaysAndwwekDays();
+			hotelList.stream().forEach(hotel -> getMinRate(hotel));
+			Integer rating = hotelList.stream().filter(hotel -> expenditure(hotel) == minRate)
+					.map(e -> e.getRatings()).max(Integer::compare).get();
+			hotelList.stream().filter(hotel -> expenditure(hotel)== minRate).filter(hotel -> hotel.getRatings()==rating)
+					.forEach(i -> System.out.println(i.getName()+ ", Rating : " + i.getRatings() + " and Total Rates: $" + minRate)); 
+		} 
+
+	@Override
+	public void bestRatedHotel() {
+		setDatesDaysAndwwekDays();
+		Integer rating = hotelList.stream().map(e -> e.getRatings()).max(Integer::compare).get();
+		hotelList.stream().filter(hotel -> hotel.getRatings()==rating).forEach(i->System.out.println(i.getName()+" and Total Rates $"+expenditure(i)));
 	}
 }
