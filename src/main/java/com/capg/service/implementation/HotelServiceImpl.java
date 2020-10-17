@@ -50,7 +50,7 @@ public class HotelServiceImpl implements HotelService {
 	}
 	
 	void getMinRate(Hotel hotel) {
-		minRate = minRate < hotel.getRateForRegCoustomer() ? minRate : hotel.getRateForRegCoustomer();
+		minRate = minRate < hotel.getWeekDayRate() ? minRate : hotel.getWeekDayRate();
 	}
 	
 	@Override
@@ -64,7 +64,7 @@ public class HotelServiceImpl implements HotelService {
 			long noOfDays = (difference_In_Time / (1000 * 60 * 60 * 24)) % 365;
 			System.out.println("Total no. of Days : " + (noOfDays + 1));
 			hotelList.stream().forEach(hotel -> getMinRate(hotel));
-			hotelList.stream().filter(hotel -> hotel.getRateForRegCoustomer()==minRate)
+			hotelList.stream().filter(hotel -> hotel.getWeekDayRate()==minRate)
 					 .forEach(hotel -> System.out.println("The Hotel with minimum rate of Rs." + minRate + " is "+ hotel.getName()));
 		} catch (DateTimeException e) {
 			e.printStackTrace();

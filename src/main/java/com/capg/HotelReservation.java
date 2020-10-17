@@ -10,9 +10,9 @@ import com.capg.service.implementation.Validation;
 
 
 public class HotelReservation {
-	static Hotel lakewoodHotel = new Hotel("Lakewood", 110);
-	static Hotel bridgewoodHotel = new Hotel("Bridgewood", 160);
-	static Hotel ridgewoodHotel = new Hotel("Ridgewood", 220);
+	static Hotel lakewoodHotel = new Hotel("Lakewood", 110, 90);
+	static Hotel bridgewoodHotel = new Hotel("Bridgewood", 150, 50);
+	static Hotel ridgewoodHotel = new Hotel("Ridgewood", 220, 150);
 	
 	public static void main(String[] args) {
 		System.out.println("Welcome to Hotel Reservation Program");
@@ -42,10 +42,12 @@ public class HotelReservation {
 					hotelName = sc.next();
 					valid = validate.validateHotelName(hotelName);
 				}
-				System.out.println("Enter the amount for regular customers");
-				int regCoustmerRate = sc.nextInt();
+				System.out.println("Enter the weekday amount for regular customers");
+				int weekDayRate = sc.nextInt();
+				System.out.println("Enter the weekend amount for regular customers");
+				int weekEndRate = sc.nextInt();
 				System.out.println("Successfull Entry");
-				Hotel hotel = new Hotel(hotelName, regCoustmerRate);
+				Hotel hotel = new Hotel(hotelName, weekDayRate, weekEndRate);
 				hotelService.addHotel(hotel);
 				hotelService.showHotel();
 				break;
@@ -55,7 +57,7 @@ public class HotelReservation {
 				hotelService.cheapestHotel();
 				break;
 			default:
-				System.out.println("Wrong input, Try Agin");
+				System.out.println("Wrong input, Try Again");
 				break;
 			}
 		}
