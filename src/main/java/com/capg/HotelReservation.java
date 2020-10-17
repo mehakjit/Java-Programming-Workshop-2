@@ -8,12 +8,11 @@ import com.capg.service.Validate;
 import com.capg.service.implementation.HotelServiceImpl;
 import com.capg.service.implementation.Validation;
 
-
 public class HotelReservation {
-	static Hotel lakewoodHotel = new Hotel("Lakewood", 110, 90);
-	static Hotel bridgewoodHotel = new Hotel("Bridgewood", 150, 50);
-	static Hotel ridgewoodHotel = new Hotel("Ridgewood", 220, 150);
-	
+	static Hotel lakewoodHotel = new Hotel("Lakewood", 110, 90, 3);
+	static Hotel bridgewoodHotel = new Hotel("Bridgewood", 150, 50, 4);
+	static Hotel ridgewoodHotel = new Hotel("Ridgewood", 220, 150, 5);
+
 	public static void main(String[] args) {
 		System.out.println("Welcome to Hotel Reservation Program");
 		HotelService hotelService = new HotelServiceImpl();
@@ -24,12 +23,11 @@ public class HotelReservation {
 		hotelService.addHotel(ridgewoodHotel);
 		hotelService.showHotel();
 		int options = 1;
-		while(options!=0) {
-			System.out.println("\nPress 1 to add another Hotel with their custom rate. \n" +
-							   "Press 2 to find the cheapest Hotel from given List. \n" +
-							   "Press 0 to Exit");
+		while (options != 0) {
+			System.out.println("\nPress 1 to add another Hotel with their custom rate. \n"
+					+ "Press 2 to find the cheapest Hotel from given List. \n" + "Press 0 to Exit");
 			options = sc.nextInt();
-			switch(options) {
+			switch (options) {
 			case 0:
 				System.out.println("Exit.");
 				break;
@@ -38,7 +36,8 @@ public class HotelReservation {
 				String hotelName = sc.next();
 				boolean valid = validate.validateHotelName(hotelName);
 				while (!valid) {
-					System.out.println("Invalid Name, Try Again Correct Name starts with capital letter and should have minimum of 3 Alphabets");
+					System.out.println(
+							"Invalid Name, Try Again Correct Name starts with capital letter and should have minimum of 3 Alphabets");
 					hotelName = sc.next();
 					valid = validate.validateHotelName(hotelName);
 				}
@@ -46,8 +45,10 @@ public class HotelReservation {
 				int weekDayRate = sc.nextInt();
 				System.out.println("Enter the weekend amount for regular customers");
 				int weekEndRate = sc.nextInt();
+				System.out.println("Enter the eatings for the hotel");
+				int ratings = sc.nextInt();
 				System.out.println("Successfull Entry");
-				Hotel hotel = new Hotel(hotelName, weekDayRate, weekEndRate);
+				Hotel hotel = new Hotel(hotelName, weekDayRate, weekEndRate, ratings);
 				hotelService.addHotel(hotel);
 				hotelService.showHotel();
 				break;
