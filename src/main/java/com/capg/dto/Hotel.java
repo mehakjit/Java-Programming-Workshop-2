@@ -2,11 +2,13 @@ package com.capg.dto;
 
 public class Hotel {
 	String name;
-	int rateForRegCustomer;
+	int weekDayRate;
+	int weekEndRate;
 
-	public Hotel(String name, int rateForCustomer) {
+	public Hotel(String name, int weekDayRate, int weekEndRate) {
 		this.name = name;
-		this.rateForRegCustomer = rateForCustomer;
+		this.weekDayRate = weekDayRate;
+		this.weekEndRate = weekEndRate;
 	}
 
 	public Hotel() {
@@ -20,16 +22,26 @@ public class Hotel {
 		this.name = name;
 	}
 
-	public int getRateForRegCoustomer() {
-		return rateForRegCustomer;
+	public int getWeekDayRate() {
+		return weekDayRate;
 	}
 
-	public void setRateForRegCoustomer(int rateForRegCoustomer) {
-		this.rateForRegCustomer = rateForRegCoustomer;
+	public void setWeekDayRate(int weekDayRate) {
+		this.weekDayRate = weekDayRate;
+	}
+
+	public int getWeekEndRate() {
+		return weekEndRate;
+	}
+
+	public void setWeekEndRate(int weekEndRate) {
+		this.weekEndRate = weekEndRate;
 	}
 
 	@Override
 	public String toString() {
-		return "Hotel [name=" + name + ", Regular Customer Rate =" + rateForRegCustomer + "]";
+		return "Hotel Name=" + name + ", weekDayRate=" + weekDayRate + ", weekEndRate=" + weekEndRate ;
 	}
+
+	
 }
