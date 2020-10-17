@@ -8,4 +8,6 @@ public interface HotelService {
 	public void showHotel();
 
 	public void cheapestHotel();
+
+	public void bestRatedHotel();
 }
