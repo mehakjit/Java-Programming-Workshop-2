@@ -77,11 +77,14 @@ public class HotelServiceImpl implements HotelService {
 			}
 			System.out.println("Total no. of Days : " + No_of_days);
 			hotelList.stream().forEach(hotel -> getMinRate(hotel));
-			hotelList.stream()
+			Integer rating = hotelList.stream()
 					.filter(hotel -> (hotel.getWeekDayRate() * (No_of_days - weekendDays)
 							+ hotel.getWeekEndRate() * weekendDays) == minRate)
-					.forEach(hotel -> System.out
-							.println("The Hotel with minimum expenditure of Rs." + minRate + " is " + hotel.getName()));
+					.map(e -> e.getRatings()).max(Integer::compare).get();
+			hotelList.stream()
+			.filter(hotel -> (hotel.getWeekDayRate() * (No_of_days - weekendDays)
+					+ hotel.getWeekEndRate() * weekendDays) == minRate).filter(hotel -> hotel.getRatings()==rating)
+			.forEach(i -> System.out.println(i.getName()+ ", Rating : " + i.getRatings() + " and Total Rates: $" + minRate)); 
 		} catch (DateTimeException e) {
 			e.printStackTrace();
 		}
