@@ -11,7 +11,6 @@ import java.time.DateTimeException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 //import java.util.stream.IntStream;
 
 
@@ -20,6 +19,8 @@ public class HotelServiceImpl implements HotelService {
 	Validate validate = new Validation();
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMMyyyy");
 	Scanner sc = new Scanner(System.in);
+	static int No_of_days = 0;
+	static int weekendDays = 0;
 	static int minRate = 1000;
 	static String HotelName = null;
 	@Override
@@ -50,8 +51,14 @@ public class HotelServiceImpl implements HotelService {
 	}
 	
 	void getMinRate(Hotel hotel) {
-		minRate = minRate < hotel.getWeekDayRate() ? minRate : hotel.getWeekDayRate();
+		minRate = minRate < expenditure(hotel) ? minRate : expenditure(hotel);
 	}
+	
+	int expenditure(Hotel hotel){
+		int price = hotel.getWeekDayRate()*(No_of_days-weekendDays) + hotel.getWeekEndRate()*weekendDays;
+		return price;
+	}
+	
 	
 	@Override
 	public void cheapestHotel() {
@@ -61,11 +68,19 @@ public class HotelServiceImpl implements HotelService {
 		Date outDate = validatedDate();
 		try {
 			long difference_In_Time = outDate.getTime() - inDate.getTime();
-			long noOfDays = (difference_In_Time / (1000 * 60 * 60 * 24)) % 365;
-			System.out.println("Total no. of Days : " + (noOfDays + 1));
+			No_of_days = ((int) ((difference_In_Time / (1000 * 60 * 60 * 24)) % 365) + 1);
+			int day = inDate.getDay();
+					int tempDay = day;
+					for (int i = 0; i < No_of_days; i++) {
+						if (tempDay == 0 || tempDay == 6) {
+							weekendDays++;
+						}
+						tempDay = (tempDay+1)%7;
+					}
+			System.out.println("Total no. of Days : " + No_of_days);
 			hotelList.stream().forEach(hotel -> getMinRate(hotel));
-			hotelList.stream().filter(hotel -> hotel.getWeekDayRate()==minRate)
-					 .forEach(hotel -> System.out.println("The Hotel with minimum rate of Rs." + minRate + " is "+ hotel.getName()));
+			hotelList.stream().filter(hotel -> (hotel.getWeekDayRate()*(No_of_days-weekendDays) + hotel.getWeekEndRate()*weekendDays)==minRate)
+					 .forEach(hotel -> System.out.println("The Hotel with minimum expenditure of Rs." + minRate + " is "+ hotel.getName()));
 		} catch (DateTimeException e) {
 			e.printStackTrace();
 		}
