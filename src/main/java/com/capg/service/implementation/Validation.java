@@ -7,7 +7,7 @@ import com.capg.service.Validate;
 
 public class Validation implements Validate {
 	
-	private final String DATE = "^[0-3][0-9][A-Z][A-z,a-z]{2}202[0-1]$";
+	private final String DATE = "^(0?[1-9]|[12][0-9]|3[01])[A-Z][A-z,a-z]{2}202[0-1]$";
 	private final String HOTEL_NAME = "^[A-Z][a-z,A-z]{2,}";
 	
 
