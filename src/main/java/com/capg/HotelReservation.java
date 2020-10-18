@@ -26,7 +26,8 @@ public class HotelReservation {
 		while (options != 0) {
 			System.out.println("\nPress 1 to add another Hotel with their custom rate. \n" + 
 							   "Press 2 to find the cheapest Hotel from given List. \n" + 
-							   "Press 3 to find best rated Hotel from given List. \n"+ "Press 0 to Exit");
+							   "Press 3 to find best rated Hotel from given List. \n" +
+							   "Press 0 to Exit");
 			options = sc.nextInt();
 			switch (options) {
 			case 0:
@@ -64,7 +65,7 @@ public class HotelReservation {
 				break;
 			case 3:
 				System.out.println(
-						"\nPlease enter the duration of your stay in format ddMMMyyyy to find the cheapest stay rate in the above mentioned hotels");
+						"\nPlease enter the duration of your stay in format ddMMMyyyy to find the best rated stay rate in the above mentioned hotels");
 				hotelService.bestRatedHotel();
 				break;
 			default:

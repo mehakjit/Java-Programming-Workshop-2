@@ -44,12 +44,23 @@ public class HotelServiceImpl implements HotelService {
 			return dte;
 		} catch (ParseException e) {
 			e.printStackTrace();
+		}catch (DateTimeException f) {
+			f.printStackTrace();
 		}
 		return null;
 	}
 	
 	void getMinRate(Hotel hotel) {
 		minRate = minRate < expenditure(hotel) ? minRate : expenditure(hotel);
+	}
+	void getMinRewRate(Hotel hotel) {
+		minRate = minRate < expenditureReward(hotel) ? minRate : expenditureReward(hotel);
+	}
+
+
+	private int expenditureReward(Hotel hotel) {
+		int price = hotel.getRewWeekDayRate() * (No_of_days - weekendDays) + hotel.getRewWeekEndRate() * weekendDays;
+		return price;
 	}
 
 	int expenditure(Hotel hotel) {
@@ -65,30 +76,51 @@ public class HotelServiceImpl implements HotelService {
 		Date inDate = validatedDate();
 		System.out.println("Check Out Date : ");
 		Date outDate = validatedDate();
-		try {
-			long difference_In_Time = outDate.getTime() - inDate.getTime();
-			No_of_days = ((int) ((difference_In_Time / (1000 * 60 * 60 * 24)) % 365) + 1);
-			int day = inDate.getDay();
-			int tempDay = day;
-			for (int i = 0; i < No_of_days; i++) {
-				if (tempDay == 0 || tempDay == 6) {
-					weekendDays++;
-				}
-				tempDay = (tempDay + 1) % 7;
+		long difference_In_Time = outDate.getTime() - inDate.getTime();
+		No_of_days = ((int) ((difference_In_Time / (1000 * 60 * 60 * 24)) % 365) + 1);
+		int day = inDate.getDay();
+		int tempDay = day;
+		for (int i = 0; i < No_of_days; i++) {
+			if (tempDay == 0 || tempDay == 6) {
+				weekendDays++;
 			}
-		} catch (DateTimeException e) {
+			tempDay = (tempDay + 1) % 7;
+		}
+	}
+
+	boolean customerType() {
+		System.out.println("Type in Reward if you are a part of Loyality program otherwise normal rates would apply");
+		boolean option = false;
+		try {
+			sc.nextLine();
+			String in = sc.nextLine();
+			option = (in.equalsIgnoreCase("Reward")) ? true : false;
+		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
+		String loyaltyStaus = (option) ? "Minimum Rates applied according to Loyalty Pack" : "Sorry, Not applicable";
+		System.out.println(loyaltyStaus);
+		return option;
 	}
 
 	@Override
 	public void cheapestHotel() {
 			setDatesDaysAndwwekDays();
-			hotelList.stream().forEach(hotel -> getMinRate(hotel));
-			Integer rating = hotelList.stream().filter(hotel -> expenditure(hotel) == minRate)
-					.map(e -> e.getRatings()).max(Integer::compare).get();
-			hotelList.stream().filter(hotel -> expenditure(hotel)== minRate).filter(hotel -> hotel.getRatings()==rating)
-					.forEach(i -> System.out.println(i.getName()+ ", Rating : " + i.getRatings() + " and Total Rates: $" + minRate)); 
+			if (customerType()) {
+				hotelList.stream().forEach(hotel -> getMinRewRate(hotel));
+				Integer rating = hotelList.stream().filter(hotel -> expenditureReward(hotel) == minRate)
+						.map(e -> e.getRatings()).max(Integer::compare).get();
+				hotelList.stream().filter(hotel -> expenditureReward(hotel) == minRate)
+						.filter(hotel -> hotel.getRatings() == rating)
+						.forEach(i -> System.out.println(i.getName() + ", Rating : " + i.getRatings() + " and Total Reward Rates: $" + minRate));
+			} else {
+				hotelList.stream().forEach(hotel -> getMinRate(hotel));
+				Integer rating = hotelList.stream().filter(hotel -> expenditure(hotel) == minRate)
+						.map(e -> e.getRatings()).max(Integer::compare).get();
+				hotelList.stream().filter(hotel -> expenditure(hotel) == minRate)
+						.filter(hotel -> hotel.getRatings() == rating)
+						.forEach(i -> System.out.println(i.getName()+ ", Rating : " + i.getRatings() + " and Total Rates: $" + minRate)); 
+			}
 		} 
 
 	@Override
