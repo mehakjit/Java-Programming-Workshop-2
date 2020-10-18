@@ -36,7 +36,7 @@ public class HotelServiceImpl implements HotelService {
 			boolean valid = validate.validateDate(date);
 			while (!valid) {
 				System.out.println(
-						"Invalid Date, Try Again Correct Date Format ddMMMyyyy and date should be in the year 2020");
+						"Invalid Date, Try Again Correct Date Format ddMMMyyyy and date should be in the year 2020-21");
 				date = sc.next();
 				valid = validate.validateDate(date);
 			}
@@ -126,7 +126,12 @@ public class HotelServiceImpl implements HotelService {
 	@Override
 	public void bestRatedHotel() {
 		setDatesDaysAndwwekDays();
+		if (customerType()) {
+			Integer rating = hotelList.stream().map(e -> e.getRatings()).max(Integer::compare).get();
+			hotelList.stream().filter(hotel -> hotel.getRatings()==rating).forEach(i->System.out.println(i.getName()+" and Total Reward Rates $"+expenditureReward(i)));
+		} else {
 		Integer rating = hotelList.stream().map(e -> e.getRatings()).max(Integer::compare).get();
 		hotelList.stream().filter(hotel -> hotel.getRatings()==rating).forEach(i->System.out.println(i.getName()+" and Total Rates $"+expenditure(i)));
+		}
 	}
 }
